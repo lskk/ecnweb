@@ -1,0 +1,116 @@
+{% load i18n %}
+{% load static %}
+    <style>
+        footer {
+        }
+        .footer-1 {
+            background: #f7f7f8;
+            min-height: 5rem;
+            width: 100%;
+            color: #46484a;
+            padding-top: 1rem;
+            padding-bottom: 0.5rem;
+        }
+        .footer-1 a.navbar-brand {
+            color: #000 !important;
+        }
+        .footer-1 .nav-footer {
+            float: left;
+            padding: 0;
+        }
+        .footer-1 .nav-footer .nav-link {
+            color: #696b6e;
+        }
+        .footer-1 .nav-footer .nav-link:hover {
+            color: #59a0d7;
+        }
+        .footer-1 .social li a {
+            background: none;
+            border: none;
+        }
+        .nav-footer {
+            list-style: none;
+            float: right;
+        }
+        .nav-link {
+            display: block;
+            padding: 0.5em 1em;
+        }
+        .nav-footer {
+          list-style: none;
+          float: right;
+          }
+          .nav-footer li {
+            float: left;
+            margin-top: .5rem; }
+
+        @media screen and (max-width: 768px) {
+          .nav-footer {
+            width: 100%;
+            padding: 0;
+            display: flex;
+            justify-content: center; } }
+
+        .social {
+          margin: 0 auto;
+          padding: 0; }
+
+        .social li {
+          display: inline-block; }
+
+        .social li a {
+          display: block;
+          width: 2.2rem;
+          height: 2.2rem;
+          margin: .4rem .1rem;
+          text-align: center;
+          text-decoration: none;
+          background: #fff;
+          color: #696b6e;
+          border: 0.1rem solid #dfe1e5;
+          border-radius: 499rem;
+          line-height: 1.5;
+          font-size: 1.4rem; }
+
+        .social li a:hover {
+          color: #59a0d7;
+          border-color: #59a0d7; }
+    </style>
+    <footer class="footer-1 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 text-center text-md-left">
+                    <ul class="nav-footer mt-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">{% trans 'Home' %}</a>
+                        </li>
+                        {% comment %}<li class="nav-item">
+                            <a class="nav-link" href="{% url 'edu:terms' %}">{% trans 'Terms of Service' %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'edu:privacy' %}">{% trans 'Privacy Policy' %}</a>
+                        </li>{% endcomment %}
+                    </ul>
+                </div>
+                {% comment %}<div class="col-md-4 mt-1 text-center text-md-right">
+                    <ul class="social">
+                        <li><a href="//www.facebook.com/TipsKeluargaSamara/" target="_blank" title="Facebook" class="fa fa-facebook"></a></li>
+                        <li><a href="//twitter.com/keluargasamara" target="_blank" title="Twitter" class="fa fa-twitter"></a></li>
+                        <li><a href="//www.instagram.com/tipskeluargasamara/" target="_blank" title="Instagram" class="fa fa-instagram"></a></li>
+                        <li><a href="//id.pinterest.com/keluargasamara/" target="_blank" title="Pinterest" class="fa fa-pinterest"></a></li>
+                        <div class="clear"></div>
+                    </ul>
+                </div>{% endcomment %}
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.4/js/mdb.min.js"></script>

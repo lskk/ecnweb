@@ -1,0 +1,69 @@
+{% extends 'station/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+   integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+   crossorigin=""/>
+
+<style type="text/css">
+#stationMap { height: 300px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" role="navigation" style="margin-top: -1.5rem">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% blocktrans %}Dashboard{% endblocktrans %}</li>
+    </ol>
+</nav>
+
+<div class="container">
+
+    <div id="stationMap" class="mb-4"></div>
+    <h3>Recently Active Stations</h3>
+    <ul class="list-group mb-4">
+        {% for station in stations %}
+        <li class="list-group-item"><strong class="mr-2">{{ station.name }}</strong> <span class="badge badge-secondary">{{ station.kind }}</span>
+            <span class="badge badge-info">{{ station.state }}</span><br/>
+            <small class="text-muted">Loc: {{ station.location.coordinates.0 }},{{ station.location.coordinates.1 }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+    <p class="text-muted"><small>
+        <strong>Station kind</strong>: <span class="badge badge-secondary ml-2">S</span> Stationary <span class="badge badge-secondary ml-2">M</span> Mobile <span class="badge badge-secondary ml-2">L</span> Stationary (legacy)<br/>
+        <strong>State</strong>: <span class="badge badge-info ml-2">H</span> High-rate streaming <span class="badge badge-info ml-2">N</span> Normal-rate streaming
+        <span class="badge badge-info ml-2">A</span> Alert
+        <span class="badge badge-info ml-2">R</span> Ready
+        <span class="badge badge-info ml-2">E</span> Eco-mode
+        <span class="badge badge-info ml-2">L</span> Lost
+    </small></p>
+
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+   integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+   crossorigin=""></script>
+<script type="application/javascript">
+var stations = {{ stations_json | safe }};
+
+var stationMap = L.map('stationMap').setView([-6.888, 107.61], 12);
+L.tileLayer('http://{s}.tile.openstreetmap.fr/{id}/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Map style by <a href="https://wiki.openstreetmap.org/wiki/Humanitarian_OSM_Team">Humanitarian OSM Team</a>',
+    maxZoom: 18,
+    id: 'hot',
+    subdomains: 'ab',
+}).addTo(stationMap);
+
+stations.forEach(function(station) {
+    let marker = L.marker([station.location.coordinates[1], station.location.coordinates[0]])
+        .bindPopup('<strong>' + station.name + '</strong> <span class="badge badge-secondary">' + station.kind + '</span> <span class="badge badge-info">' + station.state + '</span>')
+        .addTo(stationMap);
+});
+</script>
+{% endblock %}

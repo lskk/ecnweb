@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    {% if google_analytics_tracking_id %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_tracking_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', '{{ google_analytics_tracking_id }}');
+    </script>
+    {% endif %}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    {% if page_title %}
+    <title>{{ page_title }} - Earthquake Catcher Network (ECN)</title>
+    {% else %}
+    <title>Earthquake Catcher Network (ECN) - Research for Earthquake, Tsunami, and Disaster Management</title>
+    {% endif %}
+    {% comment %}<link rel="alternate" hreflang="en-us" href="{{ hreflang_en }}"/>
+    <link rel="alternate" hreflang="id-id" href="{{ hreflang_id }}"/>{% endcomment %}
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.4/css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <!--<link href="css/style.css" rel="stylesheet">-->
+    <!-- scripts go to footer -->
+
+{#    {% include 'onesignal/head.html' %}#}
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+    {% include 'station/header.html' %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% include 'station/footer.html' %}
+    {% block footer %}
+    {% endblock %}
+</body>
+
+</html>
