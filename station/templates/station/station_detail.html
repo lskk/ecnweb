@@ -69,10 +69,10 @@
 <script>
 var station = {{ station_json | safe }};
 
-var stationMap = L.map('stationMap').setView([station.location.coordinates[1], station.location.coordinates[0]], 13);
+var stationMap = L.map('stationMap').setView([station.location.coordinates[1], station.location.coordinates[0]], 15);
 L.tileLayer('http://{s}.tile.openstreetmap.fr/{id}/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Map style by <a href="https://wiki.openstreetmap.org/wiki/Humanitarian_OSM_Team">Humanitarian OSM Team</a>',
-    maxZoom: 18,
+    maxZoom: 17,
     id: 'hot',
     subdomains: 'ab',
 }).addTo(stationMap);
