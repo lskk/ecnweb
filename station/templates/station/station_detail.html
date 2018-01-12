@@ -17,22 +17,14 @@
 <nav aria-label="breadcrumb" role="navigation" style="margin-top: -1.5rem">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% blocktrans %}Dashboard{% endblocktrans %}</li>
+        <li class="breadcrumb-item active" aria-current="page">{% blocktrans %}Station{% endblocktrans %} {{ station.id }}</li>
     </ol>
 </nav>
 
 <div class="container">
 
-    <div id="stationMap" class="mb-4"></div>
-    <h3>Recently Active Stations</h3>
-    <ul class="list-group mb-4">
-        {% for station in stations %}
-        <li class="list-group-item"><strong class="mr-2"><a href="{% url 'station_detail' station.id %}">{{ station.name }}</a></strong> <span class="badge badge-secondary">{{ station.kind }}</span>
-            <span class="badge badge-info">{{ station.state }}</span><br/>
-            <small class="text-muted">Loc: {{ station.location.coordinates.0 }},{{ station.location.coordinates.1 }}</small>
-        </li>
-        {% endfor %}
-    </ul>
+    <h1>Station {{ station.id }} <small class="ml-2"><span class="badge badge-secondary">{{ station.kind }}</span> <span class="badge badge-info">{{ station.state }}</span></small></h1>
+
     <p class="text-muted"><small>
         <strong>Station kind</strong>: <span class="badge badge-secondary ml-2">S</span> Stationary <span class="badge badge-secondary ml-2">M</span> Mobile <span class="badge badge-secondary ml-2">L</span> Stationary (legacy)<br/>
         <strong>State</strong>: <span class="badge badge-info ml-2">H</span> High-rate streaming <span class="badge badge-info ml-2">N</span> Normal-rate streaming
@@ -41,6 +33,22 @@
         <span class="badge badge-info ml-2">E</span> Eco-mode
         <span class="badge badge-info ml-2">L</span> Lost
     </small></p>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th scope="row">Location</th>
+                    <td>Lat: {{ station.location.coordinates.1 }} Lon: {{ station.location.coordinates.0 }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <div id="stationMap"></div>
+        </div>
+    </div>
 
 </div>
 
@@ -53,9 +61,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
 
 <script>
-var stations = {{ stations_json | safe }};
+var station = {{ station_json | safe }};
 
-var stationMap = L.map('stationMap').setView([-6.888, 107.61], 12);
+var stationMap = L.map('stationMap').setView([station.location.coordinates[1], station.location.coordinates[0]], 13);
 L.tileLayer('http://{s}.tile.openstreetmap.fr/{id}/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Map style by <a href="https://wiki.openstreetmap.org/wiki/Humanitarian_OSM_Team">Humanitarian OSM Team</a>',
     maxZoom: 18,
@@ -67,10 +75,8 @@ var legacyMarker = L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerC
 var stationeryMarker = L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerColor: 'blue'});
 var mobileMarker = L.AwesomeMarkers.icon({prefix: 'fa', icon: 'mobile', markerColor: 'purple'});
 
-stations.forEach(function(station) {
-    let marker = L.marker([station.location.coordinates[1], station.location.coordinates[0]], {icon: legacyMarker})
-        .bindPopup('<strong><a href="/station/' + station.id + '">' + station.name + '</a></strong> <span class="badge badge-secondary">' + station.kind + '</span> <span class="badge badge-info">' + station.state + '</span>')
-        .addTo(stationMap);
-});
+let marker = L.marker([station.location.coordinates[1], station.location.coordinates[0]], {icon: legacyMarker})
+    .bindPopup('<strong>' + station.name + '</strong> <span class="badge badge-secondary">' + station.kind + '</span> <span class="badge badge-info">' + station.state + '</span>')
+    .addTo(stationMap);
 </script>
 {% endblock %}

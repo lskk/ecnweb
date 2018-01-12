@@ -3,7 +3,7 @@ import logging
 import mongoengine
 from django.conf import settings
 from django.utils.datetime_safe import datetime
-from mongoengine import Document, StringField, FloatField, DateTimeField, GeoPointField, PointField
+from mongoengine import Document, StringField, FloatField, DateTimeField, GeoPointField, PointField, IntField
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ class StationState:
 
 
 class Station(Document):
+    id = IntField(primary_key=True)
     kind = StringField(db_field='k', max_length='1', min_length='1', required=True)
     name = StringField(db_field='n')
     location = PointField(db_field='l', auto_index=False)

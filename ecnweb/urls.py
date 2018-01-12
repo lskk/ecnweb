@@ -26,4 +26,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^graphql', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     url(r'^$', station.views.home, name='home'),
+    # ex: /station/4
+    url(r'^station/(?P<station_id>\d+)/$', station.views.station_detail, name='station_detail'),
 ]

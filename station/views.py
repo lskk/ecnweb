@@ -20,3 +20,15 @@ def home(request: HttpRequest):
         'stations_json': json.dumps([station.to_dict() for station in stations]),
     }
     return HttpResponse(template.render(context, request))
+
+def station_detail(request: HttpRequest, station_id: int):
+    station = Station.objects(id=int(station_id)).first()
+    logger.debug('Station %s: %s', station_id, station)
+
+    template = loader.get_template('station/station_detail.html')
+    context = {
+        # 'page_title': _("Terms of Service"),
+        'station': station,
+        'station_json': json.dumps(station.to_dict()),
+    }
+    return HttpResponse(template.render(context, request))
