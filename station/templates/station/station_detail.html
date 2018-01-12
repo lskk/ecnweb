@@ -17,13 +17,32 @@
 <nav aria-label="breadcrumb" role="navigation" style="margin-top: -1.5rem">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% blocktrans %}Station{% endblocktrans %} {{ station.id }}</li>
+        <li class="breadcrumb-item active" aria-current="page">{{ station_name }}</li>
     </ol>
 </nav>
 
 <div class="container">
 
-    <h1>Station {{ station.id }} <small class="ml-2"><span class="badge badge-secondary">{{ station.kind }}</span> <span class="badge badge-info">{{ station.state }}</span></small></h1>
+    <h1>{{ station_name }} <small class="ml-2"><span class="badge badge-secondary">{{ station.kind }}</span> <span class="badge badge-info">{{ station.state }}</span></small></h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th scope="row">Location</th>
+            <td>Lat: {{ station.location.coordinates.1 }} Lon: {{ station.location.coordinates.0 }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="row mb-4">
+        <div class="col-sm-8">
+            <canvas id="myChart" height="160"></canvas>
+            <p><small class="text-muted">All timestamps are in UTC.</small></p>
+        </div>
+        <div class="col-sm-4">
+            <div id="stationMap"></div>
+        </div>
+    </div>
 
     <p class="text-muted"><small>
         <strong>Station kind</strong>: <span class="badge badge-secondary ml-2">S</span> Stationary <span class="badge badge-secondary ml-2">M</span> Mobile <span class="badge badge-secondary ml-2">L</span> Stationary (legacy)<br/>
@@ -34,22 +53,6 @@
         <span class="badge badge-info ml-2">L</span> Lost
     </small></p>
 
-    <div class="row">
-        <div class="col-sm-8">
-            <table class="table">
-                <tbody>
-                <tr>
-                    <th scope="row">Location</th>
-                    <td>Lat: {{ station.location.coordinates.1 }} Lon: {{ station.location.coordinates.0 }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-sm-4">
-            <div id="stationMap"></div>
-        </div>
-    </div>
-
 </div>
 
 {% endblock %}
@@ -59,6 +62,9 @@
    integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
    crossorigin=""></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
 <script>
 var station = {{ station_json | safe }};
@@ -78,5 +84,72 @@ var mobileMarker = L.AwesomeMarkers.icon({prefix: 'fa', icon: 'mobile', markerCo
 let marker = L.marker([station.location.coordinates[1], station.location.coordinates[0]], {icon: legacyMarker})
     .bindPopup('<strong>' + station.name + '</strong> <span class="badge badge-secondary">' + station.kind + '</span> <span class="badge badge-info">' + station.state + '</span>')
     .addTo(stationMap);
+</script>
+
+<script>
+var accel_z_data = {{ accel_z_data_json | safe }};
+var accel_n_data = {{ accel_n_data_json | safe }};
+var accel_e_data = {{ accel_e_data_json | safe }};
+var time_start = moment('{{ time_start }}');
+var time_end = moment('{{ time_end }}');
+var sample_rate = {{ accel.sample_rate }};
+
+var labels = accel_z_data.map(function(v, i) {
+   return time_start.clone().add((1000/sample_rate) * i, 'milliseconds').toDate();
+});
+console.debug('labels=', labels);
+
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        datasets: [
+            {
+                label: 'Vertical (m/s²)',
+                data: accel_z_data,
+                pointRadius: 0,
+                borderColor: '#3f51b5',
+                borderWidth: 2,
+            },
+            {
+                label: '+North -South (m/s²)',
+                data: accel_n_data,
+                pointRadius: 0,
+                borderColor: '#009688',
+                borderWidth: 1,
+            },
+            {
+                label: '+East -West (m/s²)',
+                data: accel_e_data,
+                pointRadius: 0,
+                borderColor: '#4caf50',
+                borderWidth: 1,
+            },
+        ],
+        labels: labels,
+    },
+    options: {
+        //showLines: false,
+        elements: {
+            line: {
+                tension: 0, // disable bezier curves
+            }
+        },
+        scales: {
+            xAxes: [{
+                type: "time",
+                time: {
+                    //bounds: 'data',
+                    unit: 'second',
+                    min: time_start,
+                    max: time_end,
+                    displayFormats: {
+                        second: 'hh:mm:ss',
+                    }
+                }
+            }]
+        }
+    }
+});
 </script>
 {% endblock %}

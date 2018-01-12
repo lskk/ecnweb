@@ -3,7 +3,7 @@ import logging
 import mongoengine
 from django.conf import settings
 from django.utils.datetime_safe import datetime
-from mongoengine import Document, StringField, FloatField, DateTimeField, GeoPointField, PointField, IntField
+from mongoengine import Document, StringField, FloatField, DateTimeField, GeoPointField, PointField, IntField, ListField
 
 logger = logging.getLogger(__name__)
 
@@ -44,4 +44,19 @@ class Station(Document):
             'client_id': self.client_id,
             'state': self.state,
             'signal_time': self.signal_time.isoformat(),
+        }
+
+
+class Accel(Document):
+    id = StringField(primary_key=True)
+    sample_rate = IntField(db_field='r', required=True)
+    z = ListField(db_field='z')
+    n = ListField(db_field='n')
+    e = ListField(db_field='e')
+
+    def to_dict(self):
+        '''Used for both JSON (for JavaScript in web app) and GraphQL.'''
+        return {
+            'id': self.id, 'sample_rate': self.sample_rate,
+            'z': self.z, 'n': self.n, 'e': self.e,
         }
