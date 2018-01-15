@@ -70,7 +70,7 @@ var markers = {
     'L': L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerColor: 'cadetblue'}),
     'S': L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerColor: 'blue'}),
     'M': L.AwesomeMarkers.icon({prefix: 'fa', icon: 'mobile', markerColor: 'purple'}),
-}
+};
 
 stations.forEach(function(station) {
     let marker = L.marker([station.location.coordinates[1], station.location.coordinates[0]], {icon: markers[station.kind]})
