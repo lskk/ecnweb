@@ -43,7 +43,7 @@ class Station(Document):
             'creation_time': self.creation_time.isoformat(),
             'client_id': self.client_id,
             'state': self.state,
-            'signal_time': self.signal_time.isoformat(),
+            'signal_time': self.signal_time.isoformat() if self.signal_time else None,
         }
 
 

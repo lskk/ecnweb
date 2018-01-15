@@ -29,30 +29,26 @@ def station_detail(request: HttpRequest, station_id: int):
     station_name = station.name if station.name else 'Station ' + station.id
     now = datetime.utcnow()
     accel_id = '%s:%d' % (now.strftime('%Y%m%d%H'), station.id)
-    accel = Accel.objects(id=accel_id).fields(slice__z=[now.minute, 1], slice__n=[now.minute, 1], slice__e=[now.minute, 1]).first()
-    logger.debug('Accel %s minute=%d: %s', accel_id, now.minute, accel)
-    if accel.z[0]:
-        logger.debug('Accel z=%s n=%s e=%s', len(accel.z[0]), len(accel.n[0]), len(accel.e[0]))
-        if accel.z[0][0]:
-            logger.debug('Samples/second: z=%s n=%s e=%s', len(accel.z[0][0]), len(accel.n[0][0]), len(accel.e[0][0]))
-    now_second = now.second
-    if now_second > 5:
-        # only the previous seconds (because current second is not yet avaiable)
-        accel.z[0] = accel.z[0][now.second - 5 : now.second]
-        accel.n[0] = accel.n[0][now.second - 5 : now.second]
-        accel.e[0] = accel.e[0][now.second - 5 : now.second]
-        time_start = now.replace(second=now.second - 1, microsecond=0)
+    second_of_hour = 60 * now.minute + now.second
+    logger.debug('Accel %s second_of_hour=%d', accel_id, second_of_hour)
+    if second_of_hour >= 6:
+        # only up to the previous second (because current second is not yet avaiable)
+        accel = Accel.objects(id=accel_id).fields(slice__z=[second_of_hour - 6, 5], slice__n=[second_of_hour - 6, 5],
+                                                  slice__e=[second_of_hour - 6, 5]).first()
+        time_start = (now - timedelta(seconds=6)).replace(microsecond=0)
         time_end = time_start + timedelta(seconds=5)
     else:
-        # if we're at second 0, then return only that second (usually no data yet)
-        accel.z[0] = accel.z[0][now.second: now.second + 5]
-        accel.n[0] = accel.n[0][now.second: now.second + 5]
-        accel.e[0] = accel.e[0][now.second: now.second + 5]
-        time_start = now.replace(second=now.second, microsecond=0)
-        time_end = time_start + timedelta(seconds=5)
-    accel_z_data = [item for sublist in accel.z[0] for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
-    accel_n_data = [item for sublist in accel.n[0] for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
-    accel_e_data = [item for sublist in accel.e[0] for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+        # if we're at second close to 0, then return whatever avaialable for that hour (usually no data yet)
+        accel = Accel.objects(id=accel_id).fields(slice__z=[0, second_of_hour], slice__n=[0, second_of_hour],
+                                                  slice__e=[0, second_of_hour]).first()
+        time_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        time_end = time_start + timedelta(seconds=second_of_hour)
+    # Flatten
+    accel_z_data = [item for sublist in accel.z for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+    accel_n_data = [item for sublist in accel.n for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+    accel_e_data = [item for sublist in accel.e for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+    # logger.debug('z=%s', accel.z)
+    # logger.debug('accel_z_data=%s', accel.z)
 
     template = loader.get_template('station/station_detail.html')
     context = {

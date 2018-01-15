@@ -29,7 +29,8 @@
         {% for station in stations %}
         <li class="list-group-item"><strong class="mr-2"><a href="{% url 'station_detail' station.id %}">{{ station.name }}</a></strong> <span class="badge badge-secondary">{{ station.kind }}</span>
             <span class="badge badge-info">{{ station.state }}</span><br/>
-            <small class="text-muted">Loc: {{ station.location.coordinates.0 }},{{ station.location.coordinates.1 }}</small>
+            <small class="text-muted">Loc: {{ station.location.coordinates.0 }},{{ station.location.coordinates.1 }}<br/>
+                Last signal: {{ station.signal_time }}</small>
         </li>
         {% endfor %}
     </ul>
@@ -39,8 +40,10 @@
         <span class="badge badge-info ml-2">A</span> Alert
         <span class="badge badge-info ml-2">R</span> Ready
         <span class="badge badge-info ml-2">E</span> Eco-mode
+        <span class="badge badge-info ml-2">D</span> Dormant
         <span class="badge badge-info ml-2">L</span> Lost
     </small></p>
+    <p class="text-muted"><small>Unless specified otherwise, all timestamps are in UTC</small></p>
 
 </div>
 
@@ -63,12 +66,14 @@ L.tileLayer('http://{s}.tile.openstreetmap.fr/{id}/{z}/{x}/{y}.png', {
     subdomains: 'ab',
 }).addTo(stationMap);
 
-var legacyMarker = L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerColor: 'cadetblue'});
-var stationeryMarker = L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerColor: 'blue'});
-var mobileMarker = L.AwesomeMarkers.icon({prefix: 'fa', icon: 'mobile', markerColor: 'purple'});
+var markers = {
+    'L': L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerColor: 'cadetblue'}),
+    'S': L.AwesomeMarkers.icon({prefix: 'fa', icon: 'podcast', markerColor: 'blue'}),
+    'M': L.AwesomeMarkers.icon({prefix: 'fa', icon: 'mobile', markerColor: 'purple'}),
+}
 
 stations.forEach(function(station) {
-    let marker = L.marker([station.location.coordinates[1], station.location.coordinates[0]], {icon: legacyMarker})
+    let marker = L.marker([station.location.coordinates[1], station.location.coordinates[0]], {icon: markers[station.kind]})
         .bindPopup('<strong><a href="/station/' + station.id + '">' + station.name + '</a></strong> <span class="badge badge-secondary">' + station.kind + '</span> <span class="badge badge-info">' + station.state + '</span>')
         .addTo(stationMap);
 });
