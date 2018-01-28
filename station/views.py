@@ -55,6 +55,7 @@ def station_detail(request: HttpRequest, station_id: int):
         # 'page_title': _("Terms of Service"),
         'station': station,
         'station_name': station_name,
+        'sample_rate': accel.sample_rate if accel else None,
         'station_json': json.dumps(station.to_dict()),
         'accel': accel,
         'accel_z_data_json': json.dumps(accel_z_data),
