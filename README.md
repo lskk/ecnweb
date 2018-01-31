@@ -39,6 +39,12 @@ Requires the following environment variables:
 
    * Serve `/static/` from `ecnweb/static` folder
 
+   * Forward HTTP `Host` header
+
+   * Bonus: Set/Forward HTTP `X-Forwarded-Proto` header
+
+   * Bonus: Support SSL (see https://community.letsencrypt.org/t/how-to-generate-a-ssl-certificate-for-iis-7-0-or-7-5/29467)
+
 9. Linux: Use `gunicorn`:
 
         pip install --upgrade gunicorn
