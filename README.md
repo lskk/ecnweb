@@ -31,7 +31,9 @@ Requires the following environment variables:
 
 5. Edit `setenv.cmd` and ensure configuration (get from Dropbox admin)
 6. Run `setenv.cmd`
-7. Linux: Use `gunicorn`:
+7. `python manage.py collectstatic`
+8. Configure your webserver to serve `/static/` from `ecnweb/static` folder
+9. Linux: Use `gunicorn`:
 
         pip install --upgrade gunicorn
         gunicorn ecnweb.wsgi
