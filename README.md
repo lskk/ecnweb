@@ -47,7 +47,7 @@ Requires the following environment variables:
    Windows - Easy way: Use waitress:
 
         pip install --upgrade waitress
-        waitress-serve --port=8000 ecnweb.wsgi:application
+        waitress-serve --listen=*:8000 ecnweb.wsgi:application
 
    Windows - Hard way: https://medium.com/@bilalbayasut/deploying-python-web-app-flask-in-windows-server-iis-using-fastcgi-6c1873ae0ad8
    You need to install Web Platform Installer in IIS Manager.
@@ -58,4 +58,4 @@ Requires the following environment variables:
     cd \ecnweb
     call setenv
     set PATH=E:\ecnweb\venv\Scripts;%PATH%
-    waitress-serve --port=8000 ecnweb.wsgi:application
+    waitress-serve --listen=*:8000 ecnweb.wsgi:application
