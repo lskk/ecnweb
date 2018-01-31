@@ -31,5 +31,23 @@ Requires the following environment variables:
 
 5. Edit `setenv.cmd` and ensure configuration (get from Dropbox admin)
 6. Run `setenv.cmd`
-7. Run `python stationd.py`
+7. Linux: Use `gunicorn`:
 
+        pip install --upgrade gunicorn
+        gunicorn ecnweb.wsgi
+
+   Windows - Easy way: Use waitress:
+
+        pip install --upgrade waitress
+        waitress-serve --port=8000 ecnweb.wsgi:application
+
+   Windows - Hard way: https://medium.com/@bilalbayasut/deploying-python-web-app-flask-in-windows-server-iis-using-fastcgi-6c1873ae0ad8
+   You need to install Web Platform Installer in IIS Manager.
+
+### Autostart Script (Windows Server)
+
+    E:
+    cd \ecnweb
+    call setenv
+    set PATH=E:\ecnweb\venv\Scripts;%PATH%
+    waitress-serve --port=8000 ecnweb.wsgi:application
