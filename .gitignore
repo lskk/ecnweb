@@ -148,3 +148,4 @@ $RECYCLE.BIN/
 /venv
 /db.sqlite3
 /setenv.cmd
+/static
