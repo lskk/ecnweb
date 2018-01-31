@@ -32,7 +32,13 @@ Requires the following environment variables:
 5. Edit `setenv.cmd` and ensure configuration (get from Dropbox admin)
 6. Run `setenv.cmd`
 7. `python manage.py collectstatic`
-8. Configure your webserver to serve `/static/` from `ecnweb/static` folder
+8. Configure your webserver to:
+
+   * Reverse proxy `http://ecn.pptik.id/` to `http://localhost:8000/`
+      * Exclude `/static/*` (in IIS, use Condition - `{REQUEST_URI}` does not match pattern `^static/`)
+
+   * Serve `/static/` from `ecnweb/static` folder
+
 9. Linux: Use `gunicorn`:
 
         pip install --upgrade gunicorn
