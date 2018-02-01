@@ -35,7 +35,7 @@ Requires the following environment variables:
 8. Configure your webserver to:
 
    * Reverse proxy `http://ecn.pptik.id/` to `http://localhost:8000/`
-      * Exclude `/static/*` (in IIS, use Condition - `{REQUEST_URI}` does not match pattern `^static/`)
+      * Exclude `/static/*` (in IIS, use Condition - `{PATH_INFO}` does not match pattern `^/static/`)
 
    * Serve `/static/` from `ecnweb/static` folder
 
