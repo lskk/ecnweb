@@ -27,7 +27,7 @@ SECRET_KEY = 'zkqgtk!_5ctpc9%3&27*ugs_a0n%hve5(uk_^tm82ftv0*ufda'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', False)
 
-ALLOWED_HOSTS = ['167.205.7.226', 'localhost', 'ecn.pptik.id']
+ALLOWED_HOSTS = ['127.0.0.1', '167.205.7.226', 'localhost', 'ecn.pptik.id']
 
 
 # Application definition

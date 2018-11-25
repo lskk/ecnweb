@@ -44,9 +44,14 @@ def station_detail(request: HttpRequest, station_id: int):
         time_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
         time_end = time_start + timedelta(seconds=second_of_hour)
     # Flatten
-    accel_z_data = [item for sublist in accel.z for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
-    accel_n_data = [item for sublist in accel.n for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
-    accel_e_data = [item for sublist in accel.e for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+    if accel:
+        accel_z_data = [item for sublist in accel.z for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+        accel_n_data = [item for sublist in accel.n for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+        accel_e_data = [item for sublist in accel.e for item in (sublist if sublist else [None for i in range(accel.sample_rate)])]
+    else:
+        accel_z_data = []
+        accel_n_data = []
+        accel_e_data = []
     # logger.debug('z=%s', accel.z)
     # logger.debug('accel_z_data=%s', accel.z)
 
